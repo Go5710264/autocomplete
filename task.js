@@ -84,45 +84,28 @@ class Autocomplete {
 
     // разбитие введенной фразы на массив из букв
     let arrText = [...text]; // приведение аргумента к массиву строк
-    let textLength = arrText.length; // длинна массивва arrText
+    // let textLength = arrText.length; // длинна массивва arrText
       
     let arrOption = Array.from(this.input.children); // преобразование дочерних элементов select к массиву
-    
-    arrOption.forEach((option, i) => { // каждый элемент options
-      let arrLetters = option.text; // разбить на массив состоящий из букв 
+    arrOption.forEach((option) => { // каждый элемент options
+      let arrLetters = [...option.text]; // разбить на массив состоящий из букв 
 
-      // function comparison (arr) {
+      function comparison (sym) {
+        if (arrLetters.includes(sym)) {
+          return [
+            {
+              text: option.text,
+              value: option.value
+            }
+          ]
+        } else {
+          return false;
+        }
+      }  
 
-      //   arr.forEach((elem, indx) => {
-      //     if (indx === textLength - 1) {
-      //       if (arrLetters.includes(elem)) {
-      //         console.log(option.text);
-      //         i++;
-      //       } else { 
-      //         i++;
-      //       }
-      //     } else if (arrLetters.includes(elem)) {
-      //       indx++;
-      //     } else {
-      //       return false;
-      //     }
-      //   });
-      // }  
-
-      // comparison(arrText);      
+      arrText.forEach((symbol) => comparison(symbol));      
       
-      if (text.includes(arrLetters)) {
-        return [
-          {
-            text: arrLetters,
-            value: arrLetters.value
-          }
-        ]
-      } else {
-        return false;
-      }
     });
-
     // return [
     //   {
     //     text: 'Чубакка',
