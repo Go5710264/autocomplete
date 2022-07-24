@@ -1,21 +1,21 @@
 class Autocomplete {
   constructor( container ) {
-    this.container = container;
-    this.input = container.querySelector( '.autocomplete__input' ); // варианты ответов на запрос
-    this.searchInput = container.querySelector( '.autocomplete__search' ); // доступ к полю с поисковым запросом
-    this.list = container.querySelector( '.autocomplete__list' ); // список ответов на запрос
-    this.valueContainer = container.querySelector( '.autocomplete__value' ); // доступ к контейнеру с полем запроса
-    this.valueElement = container.querySelector( '.autocomplete__text-content' ); // поле запроса с введенным значением
+    this.container = container; // доступ к контейнеру с input
+    this.input = container.querySelector( '.autocomplete__input' ); // список с предложенными словами
+    this.searchInput = container.querySelector( '.autocomplete__search' ); // поле с введенным значением
+    this.list = container.querySelector( '.autocomplete__list' ); // какой-то список после input 
+    this.valueContainer = container.querySelector( '.autocomplete__value' ); // обертка для input и со значением в input
+    this.valueElement = container.querySelector( '.autocomplete__text-content' ); // значение текста в input
 
     this.registerEvents();
   }
 
   registerEvents() {
-    this.valueContainer.addEventListener( 'click', e => { // обработка события клика на поле ввода
-      this.searchInput.classList.add( 'autocomplete__search_active' ); // активация поля ввода????
-      this.list.classList.add( 'autocomplete__list_active' ); // активация списка ответов на запрос
-      this.searchInput.value = this.valueElement.textContent.trim(); // введенное пользователем значение преобразовать без пробелов 
-      this.searchInput.focus(); // взять в фокус поле с запросом
+    this.valueContainer.addEventListener( 'click', e => { // обработчик клика для обертки 
+      this.searchInput.classList.add( 'autocomplete__search_active' ); // смена display для поля ввода на inline-block
+      this.list.classList.add( 'autocomplete__list_active' ); //  смена display для спика после поля ввода на inline-block
+      this.searchInput.value = this.valueElement.textContent.trim(); // удаление пробелов
+      this.searchInput.focus();
 
       this.onSearch();
     });
@@ -40,7 +40,7 @@ class Autocomplete {
     });
   }
 
-  onSelect( item ) { // 
+  onSelect( item ) {
     this.input.selectedIndex = item.index;
     this.valueElement.textContent = item.text;
 
@@ -82,36 +82,38 @@ class Autocomplete {
       }
     */
 
-    // разбитие введенной фразы на массив из букв
-    let arrText = [...text]; // приведение аргумента к массиву строк
-    // let textLength = arrText.length; // длинна массивва arrText
+    // // разбитие введенной фразы на массив из букв
+    let arrText = [...text]; // разбил на массив букв
+    // // let textLength = arrText.length; // длинна массивва arrText
       
     let arrOption = Array.from(this.input.children); // преобразование дочерних элементов select к массиву
-    arrOption.forEach((option) => { // каждый элемент options
-      let arrLetters = [...option.text]; // разбить на массив состоящий из букв 
+    arrOption.forEach((option, index) => { // каждый элемент options
+      // let arrLetters = [...option.text]; // разбить на массив состоящий из букв 
+      let arrLetters = option.text; // получение слова из списка
 
-      function comparison (sym) {
-        if (arrLetters.includes(sym)) {
-          return [
-            {
-              text: option.text,
-              value: option.value
-            }
-          ]
+      function comparison (symbol, indx) {
+        if (arrLetters.includes(symbol)) { // если в слове из списка содержится данная буква
+          if (indx === arrText.length - 1) { // если данная буква последняя
+            // тут должно быть помещение слова из списка и его value в объект каторый будет выбрасываться из getMatches
+            // но как данный обьект переместить в return? если массив не объявлен в переменную??
+          }
+          return false; // выйти из функции
         } else {
-          return false;
+          index++;
+          return false; // выйти 
         }
       }  
 
-      arrText.forEach((symbol) => comparison(symbol));      
+      arrText.forEach((symbol, indx) => comparison(symbol, indx)); // каждая буква из введенного слова в функцию     
       
     });
-    // return [
-    //   {
-    //     text: 'Чубакка',
-    //     value: '1'
-    //   }
-    // ];
+
+    return [
+      {
+        text: 'Чубакка',
+        value: '1'
+      }
+    ];
   }
 }
 
