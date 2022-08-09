@@ -68,52 +68,30 @@ class Autocomplete {
   }
 
   getMatches( text ) { // получить совпадения
-    /*
-      TODO: этот метод нужно дописать
-      text - фраза, которую вводят в поле поиска
-      Метод должен вернуть массив.
+    let coincidences = []; // массив совпадний
+    let matchValue = []; // массив значений
 
-      Он формируется на основе списка опций select-элемента (this.input)
-      Подходящие опции - те, чей текст содержит то, что есть в аргументе text
-      Необходимо вернуть массив объектов со свойствами:
-      {
-        text: 'Содержимое <option>',
-        value: 'Содержимое атрибута value'
+    let answerOptions = Array.from(this.input.children); // преобразование дочерних элементов select к массиву
+    
+    answerOptions.forEach((option) => { // итерация по вариантам ответа
+      let responseText = option.text; // получение текста варианта ответа
+      
+      if (responseText.includes(text)) { // если вариант ответа содержит текст
+        coincidences.push(responseText); // запушить слово в совпадения
+        matchValue.push(option.value); // запушить значение слова в массив значений
       }
-    */
-
-    // // разбитие введенной фразы на массив из букв
-    let arrText = [...text]; // разбил на массив букв
-    // // let textLength = arrText.length; // длинна массивва arrText
-      
-    let arrOption = Array.from(this.input.children); // преобразование дочерних элементов select к массиву
-    arrOption.forEach((option, index) => { // каждый элемент options
-      // let arrLetters = [...option.text]; // разбить на массив состоящий из букв 
-      let arrLetters = option.text; // получение слова из списка
-
-      function comparison (symbol, indx) {
-        if (arrLetters.includes(symbol)) { // если в слове из списка содержится данная буква
-          if (indx === arrText.length - 1) { // если данная буква последняя
-            // тут должно быть помещение слова из списка и его value в объект каторый будет выбрасываться из getMatches
-            // но как данный обьект переместить в return? если массив не объявлен в переменную??
-          }
-          return false; // выйти из функции
-        } else {
-          index++;
-          return false; // выйти 
-        }
-      }  
-
-      arrText.forEach((symbol, indx) => comparison(symbol, indx)); // каждая буква из введенного слова в функцию     
-      
     });
 
-    return [
-      {
-        text: 'Чубакка',
-        value: '1'
-      }
-    ];
+    let result = [];
+
+    coincidences.forEach((element, index) => { // каждый элемент массива
+      result.push({ // пушить в result
+        text: element,
+        value: matchValue[index] // поиск элемента массива matchValue по индексу
+      })
+    })
+
+    return result;
   }
 }
 
